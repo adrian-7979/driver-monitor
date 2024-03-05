@@ -1,17 +1,75 @@
-# Driver Monitor System
+# Raspberry PI libcamera to openCV library with callback
 
-A camera system that detects if the driver is asleep/unconscious and rings an alarm. The system also uses the vehicle's e-call system to contact the authorities in case the driver has not woken up within a certain amount of time(say 10 seconds).
-
-The libraries/repositories used in this project are linked below:
-* libcamera2opencv - https://github.com/berndporr/libcamera2opencv 
+This is a wrapper around libcamera which makes it a lot easier to establish
+a callback containing an openCV matrix. This can then be processed by opencv
+and then displayed with QT.
 
 ## Prerequisites
+
 ```
 apt install libopencv-dev libcamera-dev
 ```
 
 ## Compilation and installation
-To be added
 
-## For more information
-(Social media links)
+```
+cmake .
+make
+sudo make install
+```
+
+## How to use it
+
+ 1. Include `libcam2opencv.h` and add `target_link_libraries(yourproj cam2opencv)` to your `CMakeLists.txt`.
+
+ 2. Create your custom callback
+```
+    struct MyCallback : Libcam2OpenCV::Callback {
+        Window* window = nullptr;
+        virtual void hasFrame(const cv::Mat &frame, const libcamera:ControlList &) {
+            if (nullptr != window) {
+                window->updateImage(frame);
+            }
+        }
+    };
+```
+
+ 3. Create instances of the the camera and the callback:
+
+```
+Libcam2OpenCV camera;
+MyCallback myCallback;
+```
+
+ 4. Register the callback
+
+```
+camera.registerCallback(&myCallback);
+```
+
+ 5. Start the camera delivering frames via the callback
+
+```
+camera.start();
+```
+
+ 6. Stop the camera
+
+```
+camera.stop();
+```
+
+## Examples
+
+### Metadata printer
+
+In the subdirectory `metadataprinter` is a demo which just prints the sensor
+metadata from the callback. This is useful to see what
+info is available for example the sensor timestamp to
+check the framerate.
+
+### QT Image Viewer
+
+The subdirectory `qtviewer` contains a simple QT application
+which displays the camera on screen and the value of one pixel
+as a thermometer with QWT.
