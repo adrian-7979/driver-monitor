@@ -4,8 +4,9 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 /*
  * Copyright (C) 2020, Ideas on Board Oy.
- * Copyright (C) 2024, Bernd Porr
+ * Copyright (C) 2024, Bernd Porr https://github.com/berndporr/ 
  * Copyright (C) 2021, kbarni https://github.com/kbarni/
+ * Copyright (C) 2024, Adrian Dsilva
  */
 
 #include <iomanip>
